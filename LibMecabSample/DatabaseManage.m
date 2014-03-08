@@ -55,7 +55,9 @@
          @"hatebu",
          @"saveddate",
          @"abstforblog",
+         @"keywordblog",
          @"ispostblog",
+         @"category",
          nil];
         
         //カラムに対応するだけループしてデータを取り出す

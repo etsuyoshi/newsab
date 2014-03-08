@@ -1,44 +1,60 @@
 //
 //  ArticleTile.m
-//  NewsAbst
+//  Newsab
 //
 //  Created by 遠藤 豪 on 2014/02/08.
 //  Copyright (c) 2014年 endo.news. All rights reserved.
 //
 
 #import "ArticleCell.h"
+#import "TextViewController.h"
 
 @implementation ArticleCell
-@synthesize text = _text;
+//@synthesize strTitle;
+//@synthesize text = _text;
+@synthesize articleData;
 //@synthesize imv = _imv;
 
 
--(id)initWithFrame:(CGRect)frame{
-    
-    return [self initWithFrame:frame
-                      withText:(NSString *)_text];
-}
--(id)initWithFrame:(CGRect)frame withText:(NSString *)_textArg{
+//-(id)initWithFrame:(CGRect)frame{
+//
+//    return [self initWithFrame:frame
+//                      withText:(NSString *)_text];
+//}
+//-(id)initWithFrame:(CGRect)frame withText:(NSString *)_textArg{
+//    self = [super initWithFrame:frame];
+//    NSLog(@"text=%@", _textArg);
+//
+//
+//
+//    if(self){
+//        [self initializerWithText:_textArg];
+//        self.text = _textArg;
+//
+//    }
+//
+//    return self;
+//}
+
+-(id)initWithFrame:(CGRect)frame
+   withArticleData:(ArticleData *)_articleData{
     self = [super initWithFrame:frame];
-    
-    self.text = _textArg;
-    
+    self.articleData = _articleData;
+    NSLog(@"ArticleCell initWithArticleData : %@",
+          self.articleData.title);
     
     if(self){
-        [self initializer];
+        [self initializerWithText:self.articleData];
         
-        UITapGestureRecognizer *tapGesture;
-        tapGesture = [[UITapGestureRecognizer alloc]
-                      initWithTarget:self
-                      action:@selector(onTapped:)];
-        [self addGestureRecognizer:tapGesture];
-        self.userInteractionEnabled = YES;
+        
     }
     
     return self;
 }
 
--(void)initializer{
+
+
+-(void)initializerWithText:(ArticleData *)_articleData{
     @autoreleasepool {
         //デフォルト値：インスタンス化した後も設定可能
         self.translucentAlpha = 0.8f;
@@ -52,16 +68,16 @@
         uil.textColor = [UIColor blueColor];
         uil.font = [UIFont fontWithName:@"AppleGothic" size:12];
         uil.textAlignment = NSTextAlignmentCenter;
-        uil.text = self.text;
-        
-        
+        uil.text = [NSString stringWithFormat:@"【%@】\n%@,\n<%@>",
+                    _articleData.title,
+                    _articleData.strSentence,
+                    _articleData.strKeyword];
+        uil.numberOfLines = 5;
+        //        NSLog(@"text=%@", _strText);
         [self addSubview:uil];
     }
 }
 
--(void)onTapped:(UITapGestureRecognizer *)gr{
-    NSLog(@"ontapped");
-}
 
 
 @end

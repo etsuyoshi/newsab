@@ -23,32 +23,41 @@ NSMutableArray *arrArticleData;
 BackgroundView *backgroundView;
 CGPoint pntStartDrag;
 int noStatus;//現在の状態(どの区切りか)を判別:最初は一番左の状態
+UIView *btnUpdate;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    
-    self.mecab = [Mecab new];
-    
-    
-    
-	// Do any additional setup after loading the view, typically from a nib.
-    
-//    NSMutableArray *newTutorials = [[NSMutableArray alloc] initWithCapacity:0];
-//    for (TFHppleElement *element in tutorialsNodes) {
-//        // 5
-//        Tutorial *tutorial = [[Tutorial alloc] init];
-//        [newTutorials addObject:tutorial];
-//        
-//        // 6
-//        tutorial.title = [[element firstChild] content];
-//        
-//        // 7
-//        tutorial.url = [element objectForKey:@"href"];
-//    }
+    //既にテキスト解析は終了しているはず
+//    self.mecab = [Mecab new];
     
     
+    
+    //背景画像backgroundViewに記事を配置
+    [self updateBackgroundAndArticle];
+    
+    
+    //更新ボタンの作成(backgroundViewの上に配置するのでも良い)
+    btnUpdate = [[UIView alloc]initWithFrame:CGRectMake(150, 30, 100, 70)];
+    [btnUpdate setBackgroundColor:[UIColor colorWithRed:1.0f green:1.0 blue:0 alpha:0.5f]];
+    [backgroundView addSubview:btnUpdate];
+    btnUpdate.userInteractionEnabled = YES;
+    
+    UITapGestureRecognizer *tapGestureUpdate;
+    tapGestureUpdate = [[UITapGestureRecognizer alloc]
+                        initWithTarget:self
+                        action:@selector(updateBackgroundAndArticle)];
+    [btnUpdate addGestureRecognizer:tapGestureUpdate];
+}
+
+-(void)updateBackgroundAndArticle{
+    //(背景画像である)backgroundにデータを格納した記事セルを配置する
+    [self setArticleWithBackground];
+    
+    //backgroundの表示
+    [self.view addSubview:backgroundView];
+    [self.view sendSubviewToBack:backgroundView];
 }
 
 -(void)onTapped:(UITapGestureRecognizer *)gr{
@@ -87,25 +96,13 @@ int noStatus;//現在の状態(どの区切りか)を判別:最初は一番左�
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
-    //背景やコンポーネントの配置
     
     
     
-    //＜未＞画面サイズに対してマージンが少しある程度のフレームを作成し、
-    //フリックで背景画像よりも少し小さめ移動させる
-    //コンポーネントの配置
-//    ArticleCell *articleView =
-//    [[ArticleCell alloc]
-//     initWithFrame:
-//     CGRectMake(10, 100, 200, 150)];
-//    
-//    articleView.translucentAlpha = 0.5f;
-////    [self.view addSubview:articleView];
-//    [backgroundView addSubview:articleView];
-    
-    
-    
-    
+    NSLog(@"exit viewDidAppear");
+}
+
+-(void)setArticleWithBackground{
     
     
     
@@ -125,31 +122,26 @@ int noStatus;//現在の状態(どの区切りか)を判別:最初は一番左�
     
     int category = 0;
     int lastID = 10000;
+    int numOfArticleAtDB = 0;
+    int maxDispArticle = 2;//簡易
     
     for(int i = 0 ;i < [arrTable count];i++){//全てのテーブルに対して
         lastID = 10000;
         category = i;
         
         //記事を確認
-        if([DatabaseManage getCountFromDBUnderNaive:lastID category:i] < 1){//if categoy's article data does not exist..
+        numOfArticleAtDB = [DatabaseManage getCountFromDBUnderNaive:lastID category:i];
+        NSLog(@"記事数:numOfArticle = %d", numOfArticleAtDB);
+        if(numOfArticleAtDB < 1){//if categoy's article data does not exist..
             continue;//記事が存在しないので次のカテゴリへ(当該カテゴリにはarticleCellを配置しない)
         }
         
         
-        for(int j = 0;j < 4;j++){//各テーブルに５個のセルを配置
+        for(int j = 0;j < MIN(maxDispArticle, numOfArticleAtDB);j++){//各テーブルに５個のセルを配置
             lastID = [DatabaseManage
                       getLastIDFromDBUnderNaive:lastID
                       category:category];
             
-            //    @"id",
-            //    @"datetime",
-            //    @"blog_id",
-            //    @"title",
-            //    @"url",
-            //    @"body_with_tags",
-            //    @"body",
-            //    @"hatebu",
-            //    @"saveddate",
             
             //上記キー値を元にデータを取得
             NSDictionary *dictTmp = [DatabaseManage getRecordFromDBAt:lastID];//lastID未満の最大のlastIDを取得する
@@ -157,17 +149,33 @@ int noStatus;//現在の状態(どの区切りか)を判別:最初は一番左�
             NSString *strTitle = [dictTmp objectForKey:@"title"];
             NSString *strReturnBody = [dictTmp objectForKey:@"body"];
             NSString *strAbst = [dictTmp objectForKey:@"abstforblog"];
+            NSString *strKeyword = [dictTmp objectForKey:@"keywordblog"];
             NSLog(@"id=%d", lastID);
             NSLog(@"strTitle = %@", strTitle);
             NSLog(@"strBody = %@", strReturnBody);
             NSLog(@"abstforblog = %@", strAbst);
+            NSLog(@"keyword=%@", strKeyword);
             
             
             //既に要約文が作成されている前提なのでテキスト解析は行わない
-//            TextAnalysis *textAnalysis = [[TextAnalysis alloc]initWithText:strReturnBody];
-//            NSArray *arrImportantSentence = textAnalysis.getImportantSentence;
-//            NSArray *arrImportantNode = textAnalysis.getImportantNode;
+            //            TextAnalysis *textAnalysis = [[TextAnalysis alloc]initWithText:strReturnBody];
+            //            NSArray *arrImportantSentence = textAnalysis.getImportantSentence;
+            //            NSArray *arrImportantNode = textAnalysis.getImportantNode;
             
+            
+            
+            
+            //記事セルにテキストを格納
+            //            articleCell.text = arrImportantSentence[j];
+            
+            ArticleData *articleData = [[ArticleData alloc]init];
+            articleData.noID = lastID;
+            articleData.title = strTitle;
+            articleData.strKeyword = strKeyword;
+            articleData.strSentence = strAbst;
+            
+            
+            [arrArticleData addObject:articleData];
             
             
             
@@ -176,12 +184,11 @@ int noStatus;//現在の状態(どの区切りか)を判別:最初は一番左�
             [[ArticleCell alloc]
              initWithFrame:
              CGRectMake(0, 0, 250, 100)
-             withText:strAbst
+             withArticleData:articleData
              ];//位置はaddCellメソッド内で適切に配置
             
-            //記事セルにテキストを格納
-            //            articleCell.text = arrImportantSentence[j];
-            [arrArticleData addObject:articleCell];
+            
+            
             [((ArticleTable *)arrTable[i]) addCell:articleCell];
             
             
@@ -201,14 +208,7 @@ int noStatus;//現在の状態(どの区切りか)を判別:最初は一番左�
     
     
     backgroundView = [[BackgroundView alloc]initWithTable:arrTable];
-    
-    //backgroundの表示
-    [self.view addSubview:backgroundView];
-    
-    NSLog(@"exit viewDidAppear");
 }
-
-
 
 
 //使用していない(必要性なければ後で削除)

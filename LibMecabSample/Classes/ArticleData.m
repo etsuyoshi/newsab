@@ -2,12 +2,19 @@
 //  ArticleData.m
 //  Newsab
 //
-//  Created by 遠藤 豪 on 2014/03/08.
+//  Created by 遠藤 豪 on 2014/02/27.
 //
 //
 
 #import "ArticleData.h"
 
 @implementation ArticleData
+
+@synthesize noID;
+//@synthesize text;
+@synthesize title;
+
+@synthesize strSentence;
+@synthesize strKeyword;
 
 @end

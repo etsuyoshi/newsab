@@ -6,6 +6,7 @@
 //
 //
 
+#import "ArticleCell.h"
 #import "TextViewController.h"
 
 @interface TextViewController ()
@@ -14,6 +15,10 @@
 
 int category;
 
+UIView *viewReturn;
+UIView *viewLink;
+ArticleCell *articleCell;
+
 @implementation TextViewController
 
 -(id)initWithArticle:(ArticleData *)articleData{
@@ -21,6 +26,46 @@ int category;
     if(self){
         
         category = 0;//articleDataのカテゴリに応じて変更
+        
+        
+        
+        
+        //戻るボタン
+        viewReturn = [[UIView alloc]initWithFrame:CGRectMake(10, 100, 150, 70)];
+        [viewReturn setBackgroundColor:[UIColor colorWithRed:1.0 green:0 blue:0 alpha:0.5f]];
+
+        
+        //tap recognizer
+        UITapGestureRecognizer *tapGestureReturn;
+        tapGestureReturn = [[UITapGestureRecognizer alloc]
+                            initWithTarget:self
+                            action:@selector(onTapped:)];
+        [viewReturn addGestureRecognizer:tapGestureReturn];
+        viewReturn.userInteractionEnabled = YES;
+        viewReturn.tag = 0;
+        
+        //本サイトへのリンク
+        viewLink = [[UIView alloc]initWithFrame:CGRectMake(200, 100, 150, 70)];
+        [viewLink setBackgroundColor:[UIColor colorWithRed:0 green:1.0 blue:0 alpha:0.5f]];
+
+        
+        
+        //tap recognizer
+        UITapGestureRecognizer *tapGestureLink;
+        tapGestureLink = [[UITapGestureRecognizer alloc]
+                          initWithTarget:self
+                          action:@selector(onTapped:)];
+        [viewLink addGestureRecognizer:tapGestureLink];
+        viewLink.userInteractionEnabled = YES;
+        viewLink.tag = 1;
+        
+        
+        //記事のタイトル表示と要約表示
+        articleCell =//磨りガラス風にしたいので転用(特別な意図はない)
+        [[ArticleCell alloc]
+         initWithFrame:CGRectMake(30, 180, 300, 350)
+         withArticleData:articleData];
+        
         
     }
     return self;
@@ -38,6 +83,11 @@ int category;
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    
+    
+    [self.view addSubview:viewReturn];
+    [self.view addSubview:viewLink];
+    [self.view addSubview:articleCell];
 }
 
 - (void)didReceiveMemoryWarning
@@ -50,9 +100,28 @@ int category;
     [super viewDidAppear:animated];
     
     if(category == 0){
-        [self.view addSubview:[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"aman.png"]]];
+        UIView *backgroundView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"aman.png"]];
+        [self.view addSubview:backgroundView];
+        [self.view sendSubviewToBack:backgroundView];
 //    }else{//...
     }
+    
+    
+    
+    
+}
+-(void)onTapped:(UITapGestureRecognizer *)gr{
+    NSLog(@"tapped %d, %@", [gr.view tag], gr);
+    if([gr.view tag] == 0){
+        [self dispNextViewController];
+    }else if([gr.view tag] == 1){
+        //jump to view browser with html sites(未作成)
+        
+    }
+}
+
+-(void)dispNextViewController{
+    [self dismissViewControllerAnimated:NO completion:nil];
 }
 
 @end

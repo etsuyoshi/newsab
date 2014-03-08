@@ -18,6 +18,13 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.rootViewController = [[ViewController alloc] init];
     [self.window makeKeyAndVisible];
+    
+    
+    
+    UINavigationController *navi = [[UINavigationController alloc] initWithRootViewController:[ViewController new]];
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, -20, 320, 44 + 20)];
+    view.backgroundColor = [UIColor colorWithRed:0 green:0 blue:1 alpha:0.3];
+    [navi.navigationBar insertSubview:view atIndex:1];
 
     return YES;
 }
