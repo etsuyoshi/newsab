@@ -18,6 +18,8 @@
 
 @synthesize mecab;
 
+NSMutableArray *arrArticleData;
+
 BackgroundView *backgroundView;
 CGPoint pntStartDrag;
 int noStatus;//現在の状態(どの区切りか)を判別:最初は一番左の状態
@@ -47,96 +49,20 @@ int noStatus;//現在の状態(どの区切りか)を判別:最初は一番左�
 //    }
     
     
-    
-//    @"id",
-//    @"datetime",
-//    @"blog_id",
-//    @"title",
-//    @"url",
-//    @"body_with_tags",
-//    @"body",
-//    @"hatebu",
-//    @"saveddate",
-    
-    //上記キー値を元にデータを取得
-    NSDictionary *dictTmp = [DatabaseManage getValueFromDBAt:3];
-    NSString *strReturnBody = [dictTmp objectForKey:@"body"];
-    NSLog(@"strTmp = %@", strReturnBody);
-    
-    TextAnalysis *textAnalysis = [[TextAnalysis alloc]initWithText:strReturnBody];
-    NSArray *arrImportantSentence = textAnalysis.getImportantSentence;
-    NSArray *arrImportantNode = textAnalysis.getImportantNode;
-    
-    
-    //test
-//    for(int i =0;i < [arrImportantNode count];i++){
-//        NSLog(@"arrNode%d＝%@", i, arrImportantNode[i]);
-//    }
-//    for(int i =0;i < [arrImportantSentence count];i++){
-//        NSLog(@"arrSentence%d=%@",i, arrImportantSentence[i]);
-//    }
-    
-    
-    //test
-    //stringを句点(。)で分割して文章に分割
-//    NSArray *arrSentence = [NSArray array];//空配列
-//    NSCharacterSet *spr = [NSCharacterSet characterSetWithCharactersInString:@"\n。"];//複数文字列を指定
-//    arrSentence = [strReturnBody componentsSeparatedByCharactersInSet:spr];
-//    //以下トークン分割はcomponentsSeparatedByCharactersInSet:で複数指定可能
-////    arrSentence = [strReturnBody componentsSeparatedByString:@"。"];//句点で分割
-//    
-//    //参考：「」で囲われてる文字列は。で区切らない方が良い。むしろ、鍵カッコを区切り文字として、中の文章は一つのとして扱う
-//    for(int i = 0;i < [arrSentence count];i++){
-//        NSLog(@"sentence%d=%@", i, arrSentence[i]);
-//    }
-//    
-//    //mecabによる形態素解析
-//    NSArray *arrayNodes = [mecab parseToNodeWithString:arrSentence[0]];//テキストをメカブで形態素解析してnodes(UITableCell)に格納
-//    for(int i = 0 ;i < [arrayNodes count];i++){
-//        Node *node = arrayNodes[i];
-//        NSLog(@"%@ : 品詞=%@", node.surface, node.partOfSpeech);
-//    }
-    
-    
-    
-//	Node *node = [nodes objectAtIndex:indexPath.row];
-//	cell.surfaceLabel.text = node.surface;
-//	cell.featureLabel.text = [node partOfSpeech];//[node pronunciation];
-    
-    
-    
-    
-    //表示コンポーネントやデータの初期化等
-    NSArray *arrTable = [NSArray arrayWithObjects:
-                         [[ArticleTable alloc] initWithType:TableTypeTechnology],
-                         [[ArticleTable alloc] initWithType:TableTypeSports],
-                         [[ArticleTable alloc] initWithType:TableTypeArts],
-                         [[ArticleTable alloc] initWithType:TableTypeBusiness],
-                         [[ArticleTable alloc] initWithType:TableTypeFinance],
-                         nil];
-    
-    for(int i = 0 ;i < [arrTable count];i++){//全てのテーブルに対して
-        for(int j = 0;j < 5;j++){//各テーブルに５個のセルを配置
-            
-            //記事セル作成
-            ArticleCell *articleCell =
-            [[ArticleCell alloc]initWithFrame:
-             CGRectMake(0, 0, 250, 100)
-                                     withText:arrImportantSentence[j]
-             ];//位置はaddCellメソッド内で適切に配置
-            
-            //記事セルにテキストを格納
-//            articleCell.text = arrImportantSentence[j];
-            
-            [((ArticleTable *)arrTable[i]) addCell:articleCell];
-            
-//            NSLog(@"arrtable%d = %@", i, arrTable[i]);
-        }
-    }
-    
-    
-    backgroundView = [[BackgroundView alloc]initWithTable:arrTable];
 }
+
+-(void)onTapped:(UITapGestureRecognizer *)gr{
+    
+    [self dispNextViewController:[gr.view tag]];
+}
+
+-(void)dispNextViewController:(int)noTapped{
+    TextViewController *tvcon =
+    [[TextViewController alloc]
+     initWithArticle:(ArticleData *)arrArticleData[noTapped]];
+    [self presentViewController:tvcon animated:NO completion:nil];
+}
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -176,14 +102,113 @@ int noStatus;//現在の状態(どの区切りか)を判別:最初は一番左�
 //    articleView.translucentAlpha = 0.5f;
 ////    [self.view addSubview:articleView];
 //    [backgroundView addSubview:articleView];
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    //表示コンポーネントやデータの初期化等
+    NSArray *arrTable = [NSArray arrayWithObjects:
+                         [[ArticleTable alloc] initWithType:TableTypeTechnology],
+                         [[ArticleTable alloc] initWithType:TableTypeSports],
+                         [[ArticleTable alloc] initWithType:TableTypeArts],
+                         [[ArticleTable alloc] initWithType:TableTypeBusiness],
+                         [[ArticleTable alloc] initWithType:TableTypeFinance],
+                         nil];
+    
+    arrArticleData = [NSMutableArray array];
+    
+    
+    int category = 0;
+    int lastID = 10000;
+    
+    for(int i = 0 ;i < [arrTable count];i++){//全てのテーブルに対して
+        lastID = 10000;
+        category = i;
+        
+        if(false){//if categoy's article data does not exist..
+            continue;//次のカテゴリへ(当該カテゴリにはarticleCellを配置しない)
+        }
+        
+        
+        for(int j = 0;j < 4;j++){//各テーブルに５個のセルを配置
+            lastID = [DatabaseManage
+                      getLastIDFromDBUnderNaive:lastID
+                      category:category];
+            
+            //    @"id",
+            //    @"datetime",
+            //    @"blog_id",
+            //    @"title",
+            //    @"url",
+            //    @"body_with_tags",
+            //    @"body",
+            //    @"hatebu",
+            //    @"saveddate",
+            
+            //上記キー値を元にデータを取得
+            NSDictionary *dictTmp = [DatabaseManage getRecordFromDBAt:lastID];//lastID未満の最大のlastIDを取得する
+            lastID = [[dictTmp objectForKey:@"id"] integerValue];
+            NSString *strTitle = [dictTmp objectForKey:@"title"];
+            NSString *strReturnBody = [dictTmp objectForKey:@"body"];
+            NSString *strAbst = [dictTmp objectForKey:@"abstforblog"];
+            NSLog(@"id=%d", lastID);
+            NSLog(@"strTitle = %@", strTitle);
+            NSLog(@"strBody = %@", strReturnBody);
+            NSLog(@"abstforblog = %@", strAbst);
+            
+            
+            //既に要約文が作成されている前提なのでテキスト解析は行わない
+//            TextAnalysis *textAnalysis = [[TextAnalysis alloc]initWithText:strReturnBody];
+//            NSArray *arrImportantSentence = textAnalysis.getImportantSentence;
+//            NSArray *arrImportantNode = textAnalysis.getImportantNode;
+            
+            
+            
+            
+            //記事セル作成
+            ArticleCell *articleCell =
+            [[ArticleCell alloc]
+             initWithFrame:
+             CGRectMake(0, 0, 250, 100)
+             withText:strAbst
+             ];//位置はaddCellメソッド内で適切に配置
+            
+            //記事セルにテキストを格納
+            //            articleCell.text = arrImportantSentence[j];
+            [arrArticleData addObject:articleCell];
+            [((ArticleTable *)arrTable[i]) addCell:articleCell];
+            
+            
+            
+            UITapGestureRecognizer *tapGesture;
+            tapGesture = [[UITapGestureRecognizer alloc]
+                          initWithTarget:self
+                          action:@selector(onTapped:)];
+            [articleCell addGestureRecognizer:tapGesture];
+            articleCell.userInteractionEnabled = YES;
+            //            articleCell.tag=countArticle;//初期番号をゼロにするため
+            
+            
+            //            NSLog(@"arrtable%d = %@", i, arrTable[i]);
+        }
+    }
+    
+    
+    backgroundView = [[BackgroundView alloc]initWithTable:arrTable];
 }
 
 
 
 
+//使用していない(必要性なければ後で削除)
 -(void)getDataFromDB{
     //databasemanageクラスからデータを取得(引数なしだと最大100記事を取得)
-    NSArray *array = [DatabaseManage getValueFromDB];//100個取得
+    NSArray *array = [DatabaseManage getRecordFromDBAll];//100個取得
     
     NSString *strId = nil;
     NSString *strBody = nil;

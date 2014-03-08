@@ -15,6 +15,9 @@
 #import "Mecab.h"
 #import "Node.h"
 
+#import "ArticleData.h"
+#import "TextViewController.h"
+
 @interface ViewController : UIViewController{
     Mecab *mecab;
 }

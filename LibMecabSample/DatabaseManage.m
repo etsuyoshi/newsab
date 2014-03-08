@@ -1,6 +1,6 @@
 //
 //  DatabaseManage.m
-//  NewsAbst
+//  Newsab
 //
 //  Created by 遠藤 豪 on 2014/02/08.
 //  Copyright (c) 2014年 endo.news. All rights reserved.
@@ -14,18 +14,18 @@
 
 //DB名称を他クラスから指定しないようにする
 
-+(NSArray *)getValueFromDB{
++(NSArray *)getRecordFromDBAll{
     //全部出すのは時間がかかるので最大100記事まで取得
-    return [self getValueFromDBFor:100];
+    return [self getRecordFromDBFor:100];
 }
 
-+(NSArray *)getValueFromDBFor:(int)num{
++(NSArray *)getRecordFromDBFor:(int)num{
     @autoreleasepool {
         NSMutableArray *arrReturn = [NSMutableArray array];
         int _idNo = 1;
         NSDictionary *_dict;
         for(;_idNo < num;){//num個まで取得する
-            _dict = [self getValueFromDBAt:(int)_idNo];
+            _dict = [self getRecordFromDBAt:(int)_idNo];
             if([[_dict objectForKey:@"id"] isEqual:nil]){
                 break;
             }
@@ -40,7 +40,7 @@
     
     
 }
-+(NSDictionary *)getValueFromDBAt:(int)idNo{
++(NSDictionary *)getRecordFromDBAt:(int)idNo{
     @autoreleasepool {
         //カラム配列定義
         NSArray *arrColumn =
@@ -54,6 +54,8 @@
          @"body",
          @"hatebu",
          @"saveddate",
+         @"abstforblog",
+         @"ispostblog",
          nil];
         
         //カラムに対応するだけループしてデータを取り出す
@@ -64,7 +66,7 @@
              [self getValueFromDB:[NSString stringWithFormat:@"%d", idNo]
                            column:columnName]];
         }
-    
+        
         //column名をキー値、文字列を値とする辞書を返す(具体的なキーは上記arrColumn)
         NSDictionary *_dict =
         [NSDictionary dictionaryWithObjects:arrReturned forKeys:arrColumn];
@@ -72,7 +74,57 @@
         return _dict;
     }
 }
-//
+
+
+
+//categoryカラムを追加し、(textViewControllerでuploadボタン押下後に入力するような)更新プログラム(モジュール)を作成する
+//phpファイル名称をキャピタル文字で区切る(例：FC2BlogManager.php)
+
+
+//指定したカテゴリ(DBカラム名：category)内で、指定したID以下で最大のidを返す
++(int)getLastIDFromDBUnderNaive:(int)_idNo
+                       category:(int)_category{
+    
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:0];
+    [dict setObject:[NSString stringWithFormat:@"%d",_idNo] forKey:@"id"];
+    [dict setObject:[NSString stringWithFormat:@"%d",_category] forKey:@"category"];
+    
+    NSData *data = [self formEncodedDataFromDictionary:dict];
+    //    NSURL *url = [NSURL URLWithString:@"http://satoshi.upper.jp/user/shooting/getvalue.php"];
+    //    NSURL *url = [NSURL URLWithString:@"http://test-lolipop-sql.lolipop.jp/junkai/managedb/getvalue.php"];
+    //指定したid未満で要約文が空でない最大のidを取得する
+    NSURL *url = [NSURL URLWithString:@"http://newsdb.lolipop.jp/tmp/dir/test/getIdLastArticleNaive.php"];
+    
+    NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
+    [req setHTTPMethod:@"POST"];
+    [req setHTTPBody:data];
+    
+    NSURLResponse *response;
+    NSError *error = nil;
+    NSData *result = [NSURLConnection sendSynchronousRequest:req
+                                           returningResponse:&response
+                                                       error:&error];
+    if(error){
+        NSLog(@"同期通信失敗 at getLastIDFromDBUnder");
+        return nil;
+    }else{
+        NSLog(@"同期通信成功");
+    }
+    
+    
+    NSString* resultValue =
+    [[NSString alloc]
+     initWithData:result
+     encoding:NSUTF8StringEncoding];//phpファイルのechoが返って来る
+    
+    NSLog(@"getValueFromDB = %@", resultValue);
+    
+    //ない場合は(null)が返ってくるのでint変換すると0になる(ゼロはDB上で存在しないid)
+    return [resultValue integerValue];
+}
+
+
+//指定したID(user_id)のレコードにおけるcolumnを取り出す
 +(NSString *)getValueFromDB:(NSString *)user_id column:(NSString *)column{
     
     //phpファイルの以下の変数にそれぞれ格納される：$sql = "select $_POST[item] from dbusermanage where id = '$_POST[id]'";
@@ -81,7 +133,7 @@
     [dict setObject:column forKey:@"item"];
     NSData *data = [self formEncodedDataFromDictionary:dict];
     //    NSURL *url = [NSURL URLWithString:@"http://satoshi.upper.jp/user/shooting/getvalue.php"];
-//    NSURL *url = [NSURL URLWithString:@"http://test-lolipop-sql.lolipop.jp/junkai/managedb/getvalue.php"];
+    //    NSURL *url = [NSURL URLWithString:@"http://test-lolipop-sql.lolipop.jp/junkai/managedb/getvalue.php"];
     NSURL *url = [NSURL URLWithString:@"http://newsdb.lolipop.jp/db/getvalue/getvalue.php"];
     
     NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
@@ -94,7 +146,7 @@
                                            returningResponse:&response
                                                        error:&error];
     if(error){
-        NSLog(@"同期通信失敗");
+        NSLog(@"同期通信失敗 at getValueFromDB");
         return nil;
     }else{
         NSLog(@"同期通信成功");
@@ -107,6 +159,54 @@
     
     return resultString;
 }
+
+
+
++(Boolean)updateValueToDB:(NSString *)user_id
+                   column:(NSString *)column
+                   newVal:(NSString *)newValue{
+    //他の値を更新しないようにチェック
+    if(!([column isEqualToString:@"abstforblog"] ||
+         [column isEqualToString:@"ispostblog"])){
+        NSLog(@"column error");
+        return false;
+    }
+    
+    //実行sql：$sql = "update dbusermanage SET $_POST[column] = '$_POST[value]' WHERE id = '$_POST[id]'";
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:0];
+    [dict setObject:user_id forKey:@"id"];
+    [dict setObject:column forKey:@"column"];
+    [dict setObject:newValue forKey:@"value"];
+    NSData *data = [self formEncodedDataFromDictionary:dict];
+    //下記更新必要
+    //    NSURL *url = [NSURL URLWithString:@"http://satoshi.upper.jp/user/shooting/updatevalue.php"];
+    NSURL *url = [NSURL URLWithString:@"http://newsdb.lolipop.jp/tmp/dir/test/updatevaluenews.php"];
+    NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
+    [req setHTTPMethod:@"POST"];
+    [req setHTTPBody:data];
+    
+    NSURLResponse *response;
+    NSError *error = nil;
+    NSData *result = [NSURLConnection sendSynchronousRequest:req
+                                           returningResponse:&response
+                                                       error:&error];
+    if(error){
+        NSLog(@"同期通信失敗 at updateValueToDB");
+        return false;
+    }else{
+        NSLog(@"同期通信成功");
+    }
+    
+    
+    NSString* resultString = [[NSString alloc] initWithData:result
+                                                   encoding:NSUTF8StringEncoding];//phpファイルのechoが返って来る
+    NSLog(@"userDB : updated : php comment = %@", resultString);
+    
+    
+    
+    return true;
+}
+
 
 +(NSData *)formEncodedDataFromDictionary:(NSDictionary *)dict
 {
@@ -148,7 +248,7 @@
     NSData *data;
     data = [str dataUsingEncoding:NSUTF8StringEncoding];
     NSLog(@"str = %@", str);//ex.str = id=1&item=title
-    NSLog(@"return data = %@", data);//ex.return data = <69643d31 26697465 6d3d7469 746c65>
+    NSLog(@"return data(NSData型) = %@", data);//ex.return data = <69643d31 26697465 6d3d7469 746c65>
     return data;
 }
 
