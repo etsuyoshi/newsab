@@ -130,8 +130,9 @@ int noStatus;//現在の状態(どの区切りか)を判別:最初は一番左�
         lastID = 10000;
         category = i;
         
-        if(false){//if categoy's article data does not exist..
-            continue;//次のカテゴリへ(当該カテゴリにはarticleCellを配置しない)
+        //記事を確認
+        if([DatabaseManage getCountFromDBUnderNaive:lastID category:i] < 1){//if categoy's article data does not exist..
+            continue;//記事が存在しないので次のカテゴリへ(当該カテゴリにはarticleCellを配置しない)
         }
         
         
@@ -200,6 +201,11 @@ int noStatus;//現在の状態(どの区切りか)を判別:最初は一番左�
     
     
     backgroundView = [[BackgroundView alloc]initWithTable:arrTable];
+    
+    //backgroundの表示
+    [self.view addSubview:backgroundView];
+    
+    NSLog(@"exit viewDidAppear");
 }
 
 

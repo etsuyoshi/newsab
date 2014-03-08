@@ -124,6 +124,47 @@
 }
 
 
+//指定したカテゴリ(DBカラム名：category)内で、指定したID以下で最大のidの個数(０か１のみ)を返す
++(int)getCountFromDBUnderNaive:(int)_idNo
+                       category:(int)_category{
+    
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:0];
+    [dict setObject:[NSString stringWithFormat:@"%d",_idNo] forKey:@"id"];
+    [dict setObject:[NSString stringWithFormat:@"%d",_category] forKey:@"category"];
+    
+    NSData *data = [self formEncodedDataFromDictionary:dict];
+    //指定したid未満で要約文が空でない最大のidを取得する
+    NSURL *url = [NSURL URLWithString:@"http://newsdb.lolipop.jp/tmp/dir/test/getCountArticle.php"];
+    
+    NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
+    [req setHTTPMethod:@"POST"];
+    [req setHTTPBody:data];
+    
+    NSURLResponse *response;
+    NSError *error = nil;
+    NSData *result = [NSURLConnection sendSynchronousRequest:req
+                                           returningResponse:&response
+                                                       error:&error];
+    if(error){
+        NSLog(@"同期通信失敗 at getLastIDFromDBUnder");
+        return nil;
+    }else{
+        NSLog(@"同期通信成功");
+    }
+    
+    
+    NSString* resultValue =
+    [[NSString alloc]
+     initWithData:result
+     encoding:NSUTF8StringEncoding];//phpファイルのechoが返って来る
+    
+    NSLog(@"getValueFromDB = %@", resultValue);
+    
+    //ない場合は(null)が返ってくるのでint変換すると0になる(ゼロはDB上で存在しないid)
+    return [resultValue integerValue];
+}
+
+
 //指定したID(user_id)のレコードにおけるcolumnを取り出す
 +(NSString *)getValueFromDB:(NSString *)user_id column:(NSString *)column{
     
