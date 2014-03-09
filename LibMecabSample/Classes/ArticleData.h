@@ -17,5 +17,5 @@
 
 @property (nonatomic) NSString *strSentence;
 @property (nonatomic) NSString *strKeyword;
-
+@property (nonatomic) NSString *strImageUrl;
 @end

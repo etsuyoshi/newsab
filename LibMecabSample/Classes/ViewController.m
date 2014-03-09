@@ -157,6 +157,7 @@ UIView *btnUpdate;
             NSString *strReturnBody = [dictTmp objectForKey:@"body"];
             NSString *strAbst = [dictTmp objectForKey:@"abstforblog"];
             NSString *strKeyword = [dictTmp objectForKey:@"keywordblog"];
+            NSString *strImageUrl = [dictTmp objectForKey:@"imageurl"];
             int category = [[dictTmp objectForKey:@"category"] integerValue];
             NSLog(@"id=%d", lastID);
             NSLog(@"strTitle = %@", strTitle);
@@ -182,6 +183,7 @@ UIView *btnUpdate;
             articleData.strKeyword = strKeyword;
             articleData.strSentence = strAbst;
             articleData.category = category;
+            articleData.strImageUrl = strImageUrl;
             
             
             [arrArticleData addObject:articleData];

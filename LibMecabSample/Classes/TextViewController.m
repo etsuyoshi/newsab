@@ -18,6 +18,8 @@ int category;
 UIView *viewReturn;
 UIView *viewLink;
 ArticleCell *articleCell;
+//UIImage *imgBackground;
+UIView *viewBackground;
 
 @implementation TextViewController
 
@@ -67,6 +69,19 @@ ArticleCell *articleCell;
          withArticleData:articleData];
         
         
+        //背景画像の設定
+        NSLog(@"image = %@", articleData.strImageUrl);
+        if(articleData.strImageUrl == (NSString *)[NSNull null]){
+            NSData *dt =
+            [NSData dataWithContentsOfURL:
+             [NSURL URLWithString:articleData.strImageUrl]];
+            UIImage *imgBackground = [[UIImage alloc] initWithData:dt];
+            viewBackground = [[UIImageView alloc]initWithImage:imgBackground];
+        }else{
+            viewBackground = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"aman.png"]];
+        }
+    
+        
     }
     return self;
 }
@@ -88,6 +103,8 @@ ArticleCell *articleCell;
     [self.view addSubview:viewReturn];
     [self.view addSubview:viewLink];
     [self.view addSubview:articleCell];
+    [self.view addSubview:viewBackground];
+    [self.view sendSubviewToBack:viewBackground];
 }
 
 - (void)didReceiveMemoryWarning
@@ -99,12 +116,12 @@ ArticleCell *articleCell;
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
-    if(category == 0){
-        UIView *backgroundView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"aman.png"]];
-        [self.view addSubview:backgroundView];
-        [self.view sendSubviewToBack:backgroundView];
-//    }else{//...
-    }
+//    if(category == 0){
+//        backgroundView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"aman.png"]];
+//        [self.view addSubview:backgroundView];
+//        [self.view sendSubviewToBack:backgroundView];
+////    }else{//...
+//    }
     
     
     

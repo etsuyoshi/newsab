@@ -56,6 +56,7 @@
          @"saveddate",
          @"abstforblog",
          @"keywordblog",
+         @"imageurl",
          @"ispostblog",
          @"category",
          nil];

@@ -17,5 +17,6 @@
 
 @synthesize strSentence;
 @synthesize strKeyword;
+@synthesize strImageUrl;
 
 @end
