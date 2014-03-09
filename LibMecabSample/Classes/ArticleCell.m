@@ -65,7 +65,13 @@
         UILabel *uil = [[UILabel alloc] init];
         uil.frame = self.bounds;
         uil.backgroundColor = [UIColor clearColor];
-        uil.textColor = [UIColor blueColor];
+        
+        //文字色はセルの色(＝カテゴリ)によって変えていく必要がある
+        if(_articleData.category == 0){
+            uil.textColor = [UIColor blueColor];
+        }else{//いろいろ試行錯誤していく必要あり
+            uil.textColor = [UIColor yellowColor];
+        }
         uil.font = [UIFont fontWithName:@"AppleGothic" size:12];
         uil.textAlignment = NSTextAlignmentCenter;
         uil.text = [NSString stringWithFormat:@"【%@】\n%@,\n<%@>",

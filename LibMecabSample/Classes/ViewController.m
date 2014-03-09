@@ -51,11 +51,18 @@ UIView *btnUpdate;
     [btnUpdate addGestureRecognizer:tapGestureUpdate];
 }
 
+
+/*
+ *所定の数だけarticleDataを用意
+ *articleDataをarrArticleDataに格納
+ *(articleDataに対応した)articleCellをbackgroundViewに配置
+ */
 -(void)updateBackgroundAndArticle{
     //(背景画像である)backgroundにデータを格納した記事セルを配置する
     [self setArticleWithBackground];
     
     //backgroundの表示
+    [backgroundView removeFromSuperview];
     [self.view addSubview:backgroundView];
     [self.view sendSubviewToBack:backgroundView];
 }
@@ -150,6 +157,7 @@ UIView *btnUpdate;
             NSString *strReturnBody = [dictTmp objectForKey:@"body"];
             NSString *strAbst = [dictTmp objectForKey:@"abstforblog"];
             NSString *strKeyword = [dictTmp objectForKey:@"keywordblog"];
+            int category = [[dictTmp objectForKey:@"category"] integerValue];
             NSLog(@"id=%d", lastID);
             NSLog(@"strTitle = %@", strTitle);
             NSLog(@"strBody = %@", strReturnBody);
@@ -173,6 +181,7 @@ UIView *btnUpdate;
             articleData.title = strTitle;
             articleData.strKeyword = strKeyword;
             articleData.strSentence = strAbst;
+            articleData.category = category;
             
             
             [arrArticleData addObject:articleData];
