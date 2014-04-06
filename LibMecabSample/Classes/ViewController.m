@@ -111,10 +111,6 @@ UIView *btnUpdate;
 
 -(void)setArticleWithBackground{
     
-    
-    
-    
-    
     //表示コンポーネントやデータの初期化等
     NSArray *arrTable = [NSArray arrayWithObjects:
                          [[ArticleTable alloc] initWithType:TableTypeTechnology],//category:0
@@ -211,7 +207,7 @@ UIView *btnUpdate;
                           action:@selector(onTapped:)];
             [articleCell addGestureRecognizer:tapGesture];
             articleCell.userInteractionEnabled = YES;
-            //            articleCell.tag=countArticle;//初期番号をゼロにするため
+            articleCell.tag=[arrArticleData count]-1;
             
             
             //            NSLog(@"arrtable%d = %@", i, arrTable[i]);
