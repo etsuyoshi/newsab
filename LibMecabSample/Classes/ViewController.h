@@ -19,8 +19,8 @@
 #import "TextViewController.h"
 
 @interface ViewController : UIViewController{
-    Mecab *mecab;
+//    Mecab *mecab;
 }
 
-@property (nonatomic) Mecab *mecab;
+//@property (nonatomic) Mecab *mecab;
 @end

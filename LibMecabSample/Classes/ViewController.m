@@ -16,7 +16,7 @@
 
 @implementation ViewController
 
-@synthesize mecab;
+//@synthesize mecab;
 
 NSMutableArray *arrArticleData;
 
@@ -25,6 +25,8 @@ CGPoint pntStartDrag;
 int noStatus;//現在の状態(どの区切りか)を判別:最初は一番左の状態
 UIView *btnUpdate;
 
+UIActivityIndicatorView *indicator;
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -32,7 +34,11 @@ UIView *btnUpdate;
     //既にテキスト解析は終了しているはず
 //    self.mecab = [Mecab new];
     
-    
+    //待機インジケーター
+    indicator =
+    [[UIActivityIndicatorView alloc]
+     initWithActivityIndicatorStyle:
+     UIActivityIndicatorViewStyleWhiteLarge];
     
     //背景画像backgroundViewに記事を配置
     [self updateBackgroundAndArticle];
@@ -58,6 +64,11 @@ UIView *btnUpdate;
  *(articleDataに対応した)articleCellをbackgroundViewに配置
  */
 -(void)updateBackgroundAndArticle{
+    NSLog(@"updateBackgroundAndArticle");
+    
+    [backgroundView addSubview:indicator];
+    [indicator startAnimating];//待機表示開始
+    
     //(背景画像である)backgroundにデータを格納した記事セルを配置する
     [self setArticleWithBackground];
     
@@ -65,6 +76,9 @@ UIView *btnUpdate;
     [backgroundView removeFromSuperview];
     [self.view addSubview:backgroundView];
     [self.view sendSubviewToBack:backgroundView];
+    
+    [indicator stopAnimating];//待機表示終了
+//    [indicator removeFromSuperview];//既にbackgroundがremoveされている
 }
 
 -(void)onTapped:(UITapGestureRecognizer *)gr{
@@ -126,7 +140,7 @@ UIView *btnUpdate;
     int category = 0;
     int lastID;
     int numOfArticleAtDB;
-    int maxDispArticle = 2;
+    int maxDispArticle = 1;
     
     for(int i = 0 ;i < [arrTable count];i++){//全てのテーブルに対して
         lastID = 100000;
@@ -207,7 +221,7 @@ UIView *btnUpdate;
                           action:@selector(onTapped:)];
             [articleCell addGestureRecognizer:tapGesture];
             articleCell.userInteractionEnabled = YES;
-            articleCell.tag=[arrArticleData count]-1;
+            articleCell.tag=[arrArticleData count]-1;//カテゴリによらず単調増加型のtag番号を作成
             
             
             //            NSLog(@"arrtable%d = %@", i, arrTable[i]);
