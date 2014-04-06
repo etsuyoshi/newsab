@@ -140,7 +140,7 @@ UIActivityIndicatorView *indicator;
     int category = 0;
     int lastID;
     int numOfArticleAtDB;
-    int maxDispArticle = 1;
+    int maxDispArticle = 4;
     
     for(int i = 0 ;i < [arrTable count];i++){//全てのテーブルに対して
         lastID = 100000;
