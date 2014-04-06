@@ -130,7 +130,7 @@ UIView *btnUpdate;
     int category = 0;
     int lastID;
     int numOfArticleAtDB;
-    int maxDispArticle = 2;//簡易
+    int maxDispArticle = 2;
     
     for(int i = 0 ;i < [arrTable count];i++){//全てのテーブルに対して
         lastID = 100000;

@@ -71,14 +71,24 @@ UIView *viewBackground;
         
         //背景画像の設定
         NSLog(@"image = %@", articleData.strImageUrl);
-        if(articleData.strImageUrl == (NSString *)[NSNull null]){
-            NSData *dt =
-            [NSData dataWithContentsOfURL:
-             [NSURL URLWithString:articleData.strImageUrl]];
-            UIImage *imgBackground = [[UIImage alloc] initWithData:dt];
-            viewBackground = [[UIImageView alloc]initWithImage:imgBackground];
-        }else{
+        if([articleData.strImageUrl isEqual:(NSString *)[NSNull null]] ||
+           articleData.strImageUrl == nil ||
+           [articleData.strImageUrl isEqualToString:@"http://noImageUrl.png"]){
+            
+            
             viewBackground = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"aman.png"]];
+            
+        }else{
+            UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:articleData.strImageUrl]]];
+            viewBackground = [[UIImageView alloc]initWithImage:image];
+            
+            
+//            NSData *dt =
+//            [NSData dataWithContentsOfURL:
+//             [NSURL URLWithString:articleData.strImageUrl]];
+//            UIImage *imgBackground = [[UIImage alloc] initWithData:dt];
+//            viewBackground = [[UIImageView alloc]initWithImage:imgBackground];
+
         }
     
         
@@ -128,7 +138,7 @@ UIView *viewBackground;
     
 }
 -(void)onTapped:(UITapGestureRecognizer *)gr{
-    NSLog(@"tapped %d, %@", [gr.view tag], gr);
+    NSLog(@"tapped %d, %@", (int)[gr.view tag], gr);
     if([gr.view tag] == 0){
         [self dispNextViewController];
     }else if([gr.view tag] == 1){
