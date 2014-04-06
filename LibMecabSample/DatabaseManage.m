@@ -123,7 +123,7 @@
     NSLog(@"getValueFromDB = %@", resultValue);
     
     //ない場合は(null)が返ってくるのでint変換すると0になる(ゼロはDB上で存在しないid)
-    return [resultValue integerValue];
+    return (int)[resultValue integerValue];
 }
 
 
@@ -149,10 +149,10 @@
                                            returningResponse:&response
                                                        error:&error];
     if(error){
-        NSLog(@"同期通信失敗 at getLastIDFromDBUnder");
+        NSLog(@"同期通信失敗 at getCountFromDBUnderNaive");
         return nil;
     }else{
-        NSLog(@"同期通信成功");
+        NSLog(@"同期通信成功 at getCountFromDBUnderNaive");
     }
     
     
@@ -164,7 +164,7 @@
     NSLog(@"getValueFromDB = %@", resultValue);
     
     //ない場合は(null)が返ってくるのでint変換すると0になる(ゼロはDB上で存在しないid)
-    return [resultValue integerValue];
+    return (int)[resultValue integerValue];
 }
 
 

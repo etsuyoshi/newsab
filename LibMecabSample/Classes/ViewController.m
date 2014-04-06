@@ -69,7 +69,7 @@ UIView *btnUpdate;
 
 -(void)onTapped:(UITapGestureRecognizer *)gr{
     
-    [self dispNextViewController:[gr.view tag]];
+    [self dispNextViewController:(int)[gr.view tag]];
 }
 
 -(void)dispNextViewController:(int)noTapped{
@@ -117,10 +117,10 @@ UIView *btnUpdate;
     
     //表示コンポーネントやデータの初期化等
     NSArray *arrTable = [NSArray arrayWithObjects:
-                         [[ArticleTable alloc] initWithType:TableTypeTechnology],
-                         [[ArticleTable alloc] initWithType:TableTypeSports],
+                         [[ArticleTable alloc] initWithType:TableTypeTechnology],//category:0
+                         [[ArticleTable alloc] initWithType:TableTypeSports],//category:1
                          [[ArticleTable alloc] initWithType:TableTypeArts],
-                         [[ArticleTable alloc] initWithType:TableTypeBusiness],
+                         [[ArticleTable alloc] initWithType:TableTypePolitics],
                          [[ArticleTable alloc] initWithType:TableTypeFinance],
                          nil];
     
@@ -128,12 +128,12 @@ UIView *btnUpdate;
     
     
     int category = 0;
-    int lastID = 10000;
-    int numOfArticleAtDB = 0;
+    int lastID;
+    int numOfArticleAtDB;
     int maxDispArticle = 2;//簡易
     
     for(int i = 0 ;i < [arrTable count];i++){//全てのテーブルに対して
-        lastID = 10000;
+        lastID = 100000;
         category = i;
         
         //記事を確認
@@ -144,7 +144,8 @@ UIView *btnUpdate;
         }
         
         
-        for(int j = 0;j < MIN(maxDispArticle, numOfArticleAtDB);j++){//各テーブルに５個のセルを配置
+        for(int j = 0;j < MIN(maxDispArticle, numOfArticleAtDB);j++){//各テーブルに最大表示数までのセルを配置
+            //naiveはblog_id999とかispost判定をしていないphpファイル実行
             lastID = [DatabaseManage
                       getLastIDFromDBUnderNaive:lastID
                       category:category];
@@ -152,13 +153,13 @@ UIView *btnUpdate;
             
             //上記キー値を元にデータを取得
             NSDictionary *dictTmp = [DatabaseManage getRecordFromDBAt:lastID];//lastID未満の最大のlastIDを取得する
-            lastID = [[dictTmp objectForKey:@"id"] integerValue];
+            lastID = (int)[[dictTmp objectForKey:@"id"] integerValue];
             NSString *strTitle = [dictTmp objectForKey:@"title"];
             NSString *strReturnBody = [dictTmp objectForKey:@"body"];
             NSString *strAbst = [dictTmp objectForKey:@"abstforblog"];
             NSString *strKeyword = [dictTmp objectForKey:@"keywordblog"];
             NSString *strImageUrl = [dictTmp objectForKey:@"imageurl"];
-            int category = [[dictTmp objectForKey:@"category"] integerValue];
+            int category = (int)[[dictTmp objectForKey:@"category"] integerValue];
             NSLog(@"id=%d", lastID);
             NSLog(@"strTitle = %@", strTitle);
             NSLog(@"strBody = %@", strReturnBody);
