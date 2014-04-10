@@ -78,7 +78,7 @@ UIActivityIndicatorView *indicator;
     [self.view sendSubviewToBack:backgroundView];
     
     [indicator stopAnimating];//待機表示終了
-//    [indicator removeFromSuperview];//既にbackgroundがremoveされている
+//    [indicator removeFromSuperview];//既にbackgroundViewがremoveされている
 }
 
 -(void)onTapped:(UITapGestureRecognizer *)gr{

@@ -88,6 +88,9 @@
 +(int)getLastIDFromDBUnderNaive:(int)_idNo
                        category:(int)_category{
     
+    
+    //return 14967;//有効データ例
+    
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:0];
     [dict setObject:[NSString stringWithFormat:@"%d",_idNo] forKey:@"id"];
     [dict setObject:[NSString stringWithFormat:@"%d",_category] forKey:@"category"];
