@@ -5,7 +5,7 @@
 //  Created by 遠藤 豪 on 2014/02/08.
 //  Copyright (c) 2014年 endo.news. All rights reserved.
 //
-
+#define LOG false
 #import "DatabaseManage.h"
 
 @implementation DatabaseManage
@@ -111,10 +111,14 @@
                                            returningResponse:&response
                                                        error:&error];
     if(error){
+#if LOG
         NSLog(@"同期通信失敗 at getLastIDFromDBUnder");
+#endif
         return nil;
     }else{
+#if LOG
         NSLog(@"同期通信成功");
+#endif
     }
     
     
@@ -123,7 +127,9 @@
      initWithData:result
      encoding:NSUTF8StringEncoding];//phpファイルのechoが返って来る
     
+#if LOG
     NSLog(@"getValueFromDB = %@", resultValue);
+#endif
     
     //ない場合は(null)が返ってくるのでint変換すると0になる(ゼロはDB上で存在しないid)
     return (int)[resultValue integerValue];
@@ -152,10 +158,14 @@
                                            returningResponse:&response
                                                        error:&error];
     if(error){
+#if LOG
         NSLog(@"同期通信失敗 at getCountFromDBUnderNaive");
+#endif
         return nil;
     }else{
+#if LOG
         NSLog(@"同期通信成功 at getCountFromDBUnderNaive");
+#endif
     }
     
     
@@ -164,7 +174,9 @@
      initWithData:result
      encoding:NSUTF8StringEncoding];//phpファイルのechoが返って来る
     
+#if LOG
     NSLog(@"getValueFromDB = %@", resultValue);
+#endif
     
     //ない場合は(null)が返ってくるのでint変換すると0になる(ゼロはDB上で存在しないid)
     return (int)[resultValue integerValue];
@@ -193,16 +205,22 @@
                                            returningResponse:&response
                                                        error:&error];
     if(error){
+#if LOG
         NSLog(@"同期通信失敗 at getValueFromDB");
+#endif
         return nil;
     }else{
+#if LOG
         NSLog(@"同期通信成功");
+#endif
     }
     
     
     NSString* resultString = [[NSString alloc] initWithData:result
                                                    encoding:NSUTF8StringEncoding];//phpファイルのechoが返って来る
+#if LOG
     NSLog(@"getValueFromDB = %@", resultString);
+#endif
     
     return resultString;
 }
@@ -215,7 +233,9 @@
     //他の値を更新しないようにチェック
     if(!([column isEqualToString:@"abstforblog"] ||
          [column isEqualToString:@"ispostblog"])){
+#if LOG
         NSLog(@"column error");
+#endif
         return false;
     }
     
@@ -238,16 +258,22 @@
                                            returningResponse:&response
                                                        error:&error];
     if(error){
+#if LOG
         NSLog(@"同期通信失敗 at updateValueToDB");
+#endif
         return false;
     }else{
+#if LOG
         NSLog(@"同期通信成功");
+#endif
     }
     
-    
+#if LOG
     NSString* resultString = [[NSString alloc] initWithData:result
                                                    encoding:NSUTF8StringEncoding];//phpファイルのechoが返って来る
+
     NSLog(@"userDB : updated : php comment = %@", resultString);
+#endif
     
     
     
@@ -294,8 +320,10 @@
     // 作成した文字列をUTF-8で符号化する
     NSData *data;
     data = [str dataUsingEncoding:NSUTF8StringEncoding];
+#if LOG
     NSLog(@"str = %@", str);//ex.str = id=1&item=title
     NSLog(@"return data(NSData型) = %@", data);//ex.return data = <69643d31 26697465 6d3d7469 746c65>
+#endif
     return data;
 }
 

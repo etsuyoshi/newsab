@@ -492,6 +492,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Newsab_Prefix.pch;
 				INFOPLIST_FILE = "Newsab-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = Newsab;
 			};
 			name = Debug;
@@ -508,6 +509,7 @@
 					../mecab,
 				);
 				INFOPLIST_FILE = "Newsab-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = Newsab;
 				VALIDATE_PRODUCT = YES;
 			};
