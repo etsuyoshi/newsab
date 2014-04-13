@@ -14,9 +14,9 @@
 @synthesize noID;
 //@synthesize text;
 @synthesize title;
-
+@synthesize strUrl;//url of article
 @synthesize strSentence;
 @synthesize strKeyword;
-@synthesize strImageUrl;
+@synthesize strImageUrl;//url of image
 
 @end

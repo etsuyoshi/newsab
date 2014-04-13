@@ -5,7 +5,7 @@
 //  Created by 遠藤 豪 on 2014/03/08.
 //
 //
-
+#define LOG true
 #import "ArticleCell.h"
 #import "TextViewController.h"
 
@@ -17,19 +17,21 @@ int category;
 
 UIView *viewReturn;
 UIView *viewLink;
-ArticleCell *articleCell;
+//ArticleCell *articleCell;//現在使用しない？
+UITextView *textView;
 //UIImage *imgBackground;
 UIView *viewBackground;
+ArticleData *articleData;
 
 @implementation TextViewController
 
--(id)initWithArticle:(ArticleData *)articleData{
+-(id)initWithArticle:(ArticleData *)_articleData{
     self = [super init];
     if(self){
         
         category = 0;//articleDataのカテゴリに応じて変更
         
-        
+        articleData = _articleData;
         
         
         //戻るボタン
@@ -49,8 +51,6 @@ UIView *viewBackground;
         //本サイトへのリンク
         viewLink = [[UIView alloc]initWithFrame:CGRectMake(200, 100, 150, 70)];
         [viewLink setBackgroundColor:[UIColor colorWithRed:0 green:1.0 blue:0 alpha:0.5f]];
-
-        
         
         //tap recognizer
         UITapGestureRecognizer *tapGestureLink;
@@ -63,23 +63,33 @@ UIView *viewBackground;
         
         
         //記事のタイトル表示と要約表示
-        articleCell =//磨りガラス風にしたいので転用(特別な意図はない)
-        [[ArticleCell alloc]
-         initWithFrame:CGRectMake(30, 180, 300, 350)
-         withArticleData:articleData];
-        
+//        articleCell =//磨りガラス風にしたいので転用(特別な意図はない)
+//        [[ArticleCell alloc]
+//         initWithFrame:CGRectMake(30, 180, 300, 350)
+//         withArticleData:_articleData];
+        textView = [[UITextView alloc]initWithFrame:
+                    CGRectMake(0, 100, self.view.frame.size.width,
+                               self.view.frame.size.height - 100)];//100は上部掲載予定の画像縦サイズ
+        textView.text = articleData.strSentence;
         
         //背景画像の設定
-        NSLog(@"image = %@", articleData.strImageUrl);
-        if([articleData.strImageUrl isEqual:(NSString *)[NSNull null]] ||
-           articleData.strImageUrl == nil ||
-           [articleData.strImageUrl isEqualToString:@"http://noImageUrl.png"]){
+#if LOG
+        NSLog(@"image = %@", _articleData.strImageUrl);
+#endif
+        if([_articleData.strImageUrl isEqual:(NSString *)[NSNull null]] ||
+           _articleData.strImageUrl == nil ||
+           [_articleData.strImageUrl isEqualToString:@"http://noImageUrl.png"]){
             
             
             viewBackground = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"aman.png"]];
             
         }else{
-            UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:articleData.strImageUrl]]];
+            
+#if LOG
+            NSLog(@"image Data = %@", _articleData.strImageUrl);
+#endif
+            
+            UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:_articleData.strImageUrl]]];
             viewBackground = [[UIImageView alloc]initWithImage:image];
             
             
@@ -112,7 +122,8 @@ UIView *viewBackground;
     
     [self.view addSubview:viewReturn];
     [self.view addSubview:viewLink];
-    [self.view addSubview:articleCell];
+//    [self.view addSubview:articleCell];
+    [self.view addSubview:textView];
     [self.view addSubview:viewBackground];
     [self.view sendSubviewToBack:viewBackground];
 }
@@ -138,11 +149,24 @@ UIView *viewBackground;
     
 }
 -(void)onTapped:(UITapGestureRecognizer *)gr{
+#if LOG
     NSLog(@"tapped %d, %@", (int)[gr.view tag], gr);
+#endif
     if([gr.view tag] == 0){
         [self dispNextViewController];
     }else if([gr.view tag] == 1){
-        //jump to view browser with html sites(未作成)
+        //jump to view browser with html sites(作成中)
+        
+        WebViewController *wvcon =
+        [[WebViewController alloc] initWithUrl:articleData.strUrl];//@"http:www.google.com"];
+        
+        [self presentViewController:wvcon
+                           animated:NO completion:nil];
+        
+        
+//        NSURL *url = [NSURL URLWithString:articleData.strImageUrl];
+//        NSURLRequest *request = [NSURLRequest requestWithURL:url];
+//        [self.webView loadRequest:request];
         
     }
 }

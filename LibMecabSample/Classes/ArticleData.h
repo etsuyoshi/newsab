@@ -14,7 +14,7 @@
 @property (nonatomic) int noID;
 @property (nonatomic) NSString *title;
 //@property (nonatomic) NSString *text;
-
+@property (nonatomic) NSString *strUrl;
 @property (nonatomic) NSString *strSentence;
 @property (nonatomic) NSString *strKeyword;
 @property (nonatomic) NSString *strImageUrl;

@@ -49,6 +49,7 @@
 		3469BDC518CB0E88009E29C2 /* TextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3469BDC418CB0E88009E29C2 /* TextViewController.m */; };
 		3469BDC918CB0F73009E29C2 /* ArticleData.m in Sources */ = {isa = PBXBuildFile; fileRef = 3469BDC818CB0F73009E29C2 /* ArticleData.m */; };
 		349D49DC18AB058400AF3FCD /* TextAnalysis.m in Sources */ = {isa = PBXBuildFile; fileRef = 349D49DB18AB058400AF3FCD /* TextAnalysis.m */; };
+		34C5DF4518FA3CD200A91F02 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C5DF4418FA3CD200A91F02 /* WebViewController.m */; };
 		34EA200018A1FEFE004376A0 /* Tutorial.m in Sources */ = {isa = PBXBuildFile; fileRef = 34EA1FFF18A1FEFE004376A0 /* Tutorial.m */; };
 		34EA200318A1FF41004376A0 /* Contributor.m in Sources */ = {isa = PBXBuildFile; fileRef = 34EA200218A1FF41004376A0 /* Contributor.m */; };
 		34EA200B18A2001F004376A0 /* TFHpple.m in Sources */ = {isa = PBXBuildFile; fileRef = 34EA200618A2001F004376A0 /* TFHpple.m */; };
@@ -127,6 +128,8 @@
 		3469BDC818CB0F73009E29C2 /* ArticleData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArticleData.m; sourceTree = "<group>"; };
 		349D49DA18AB058400AF3FCD /* TextAnalysis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextAnalysis.h; sourceTree = "<group>"; };
 		349D49DB18AB058400AF3FCD /* TextAnalysis.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextAnalysis.m; sourceTree = "<group>"; };
+		34C5DF4318FA3CD200A91F02 /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
+		34C5DF4418FA3CD200A91F02 /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
 		34EA1FFE18A1FEFE004376A0 /* Tutorial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tutorial.h; sourceTree = "<group>"; };
 		34EA1FFF18A1FEFE004376A0 /* Tutorial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tutorial.m; sourceTree = "<group>"; };
 		34EA200118A1FF41004376A0 /* Contributor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Contributor.h; sourceTree = "<group>"; };
@@ -316,6 +319,8 @@
 				3435872518AA344500D8632B /* BackgroundView.m */,
 				3469BDC318CB0E88009E29C2 /* TextViewController.h */,
 				3469BDC418CB0E88009E29C2 /* TextViewController.m */,
+				34C5DF4318FA3CD200A91F02 /* WebViewController.h */,
+				34C5DF4418FA3CD200A91F02 /* WebViewController.m */,
 			);
 			name = Visual;
 			sourceTree = "<group>";
@@ -468,6 +473,7 @@
 				3435871F18AA334200D8632B /* ViewController.m in Sources */,
 				3435872E18AA346D00D8632B /* DatabaseManage.m in Sources */,
 				34EA200B18A2001F004376A0 /* TFHpple.m in Sources */,
+				34C5DF4518FA3CD200A91F02 /* WebViewController.m in Sources */,
 				13C86E5B12C87B30006F2369 /* Mecab.m in Sources */,
 				34EA200018A1FEFE004376A0 /* Tutorial.m in Sources */,
 				3469BDC518CB0E88009E29C2 /* TextViewController.m in Sources */,

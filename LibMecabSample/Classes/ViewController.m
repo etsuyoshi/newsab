@@ -169,6 +169,7 @@ UIActivityIndicatorView *indicator;
             NSString *strAbst = [dictTmp objectForKey:@"abstforblog"];
             NSString *strKeyword = [dictTmp objectForKey:@"keywordblog"];
             NSString *strImageUrl = [dictTmp objectForKey:@"imageurl"];
+            NSString *strUrl = [dictTmp objectForKey:@"url"];
             int category = (int)[[dictTmp objectForKey:@"category"] integerValue];
             NSLog(@"id=%d", lastID);
             NSLog(@"strTitle = %@", strTitle);
@@ -195,6 +196,7 @@ UIActivityIndicatorView *indicator;
             articleData.strSentence = strAbst;
             articleData.category = category;
             articleData.strImageUrl = strImageUrl;
+            articleData.strUrl = strUrl;
             
             
             [arrArticleData addObject:articleData];

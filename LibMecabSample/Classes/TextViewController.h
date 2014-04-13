@@ -8,9 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "ArticleData.h"
+#import "WebViewController.h"
 
 @interface TextViewController : UIViewController
 
--(id)initWithArticle:(ArticleData *)articleData;
+-(id)initWithArticle:(ArticleData *)_articleData;
 
 @end
