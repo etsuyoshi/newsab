@@ -153,18 +153,24 @@ UIActivityIndicatorView *indicator;
             continue;//記事が存在しないので次のカテゴリへ(当該カテゴリにはarticleCellを配置しない)
         }
         
-        
+        NSLog(@"記事取得中...");
         for(int j = 0;j < MIN(maxDispArticle, numOfArticleAtDB);j++){//各テーブルに最大表示数までのセルを配置
+            
+            
             //naiveはblog_id999とかispost判定をしていないphpファイル実行
 //            lastID = [DatabaseManage
 //                      getLastIDFromDBUnderNaive:lastID
 //                      category:category];
+            
             lastID = 17054;//test用
             
             
             //上記キー値を元にデータを取得
-            NSDictionary *dictTmp = [DatabaseManage getRecordFromDBAt:lastID];//lastID未満の最大のlastIDを取得する
+//            NSLog(@"id取得中..");//以下の処理が最も時間がかかる(５秒程度)
+            NSDictionary *dictTmp = [DatabaseManage getRecordFromDBAt:lastID];//指定したIDを取得する
+//            NSLog(@"id取得完了");
             lastID = (int)[[dictTmp objectForKey:@"id"] integerValue];
+
             NSString *strTitle = [dictTmp objectForKey:@"title"];
             NSString *strReturnBody = [dictTmp objectForKey:@"body"];
             NSString *strAbst = [dictTmp objectForKey:@"abstforblog"];
@@ -183,8 +189,6 @@ UIActivityIndicatorView *indicator;
             //            TextAnalysis *textAnalysis = [[TextAnalysis alloc]initWithText:strReturnBody];
             //            NSArray *arrImportantSentence = textAnalysis.getImportantSentence;
             //            NSArray *arrImportantNode = textAnalysis.getImportantNode;
-            
-            
             
             
             //記事セルにテキストを格納
@@ -230,6 +234,7 @@ UIActivityIndicatorView *indicator;
             //            NSLog(@"arrtable%d = %@", i, arrTable[i]);
         }
     }
+    NSLog(@"記事取得完了");
     
     
     backgroundView = [[BackgroundView alloc]initWithTable:arrTable];

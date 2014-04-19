@@ -6,12 +6,19 @@
 //
 //
 #define LOG true
+#define IMAGE_HEIGHT 200
 #import "ArticleCell.h"
 #import "TextViewController.h"
 
 @interface TextViewController ()
 
 @end
+
+CGPoint _scrollPrevPoint;  //スクロールの開始位置
+BOOL _cancelDecelerating;  //慣性スクロールをキャンセルするフラグ
+int _scrolling_direction;  //0:未確定 1:上（offset.yが小さくなる）　2:下（offset.yが大きくなる）
+
+
 
 int category;
 
@@ -87,6 +94,7 @@ UIScrollView *scrollView;
         scrollView.contentSize = contentViewOnScroll.bounds.size;
         scrollView.alwaysBounceHorizontal = YES;
         scrollView.alwaysBounceVertical = NO;
+        scrollView.directionalLockEnabled = YES;
         
         //戻るために右スライドした時に表示される左ビュー
         returnView =
@@ -106,9 +114,9 @@ UIScrollView *scrollView;
         
         textView = [[UITextView alloc]initWithFrame:
                     CGRectMake(returnView.bounds.size.width,//returnViewの右隣
-                               200,
+                               IMAGE_HEIGHT,
                                self.view.frame.size.width,
-                               self.view.frame.size.height - 200)];//200は上部掲載予定の画像縦サイズ
+                               self.view.frame.size.height - IMAGE_HEIGHT)];//200は上部掲載予定の画像縦サイズ
         textView.text = articleData.strSentence;
         textView.editable = NO;
         
@@ -150,8 +158,10 @@ UIScrollView *scrollView;
                URLWithString:_articleData.strImageUrl]]];
             viewImage = [[UIImageView alloc]initWithImage:image];
         }
-    
         
+        
+        viewImage.frame = CGRectMake(returnView.bounds.size.width,0,
+                                     self.view.bounds.size.width, IMAGE_HEIGHT);
     }
     
     return self;
@@ -225,82 +235,78 @@ UIScrollView *scrollView;
                        animated:NO completion:nil];
 }
 
-//http://ushisantoasobu.hateblo.jp/entry/2012/11/25/200806
 
-//スクロールの減速がなくなったとき
-//-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-////    [self adjustScrollViewOffset];
-//    NSLog(@"scrollviewDidEndDecelarating");
-//}
-//
-////ドラッグが完了したとき
-//-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView
-//                 willDecelerate:(BOOL)decelerate {
-//    NSLog(@"scrollviewDidEndDragging : dec = %d", decelerate);
-////    [scrollView setContentOffset:scrollView.contentOffset animated:NO];
-//    if(decelerate)
-//        return;
-//    
-//    
-////    [self adjustScrollViewOffset];
-//}
-//
-//- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
-//{
-//    //↓これで止まる
-//    *targetContentOffset = scrollView.contentOffset;
-//    
-//}
-//
-//-(void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
-//{
-//    //↓これで止まる
-//    [scrollView setContentOffset:scrollView.contentOffset animated:NO];
-//    
-//}
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
+{
+    //慣性スクロールを止める
+    if (_cancelDecelerating){
+        [scrollView setContentOffset:scrollView.contentOffset animated:NO];
+    }
+}
+
+//スクロール開始前に初期位置を把握(右方向以外にスクロールできないようにするため)
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    _scrolling_direction = 0;
+    _cancelDecelerating = false;
+    _scrollPrevPoint = [scrollView contentOffset];
+}
 
 
 
 //http://cocoadays.blogspot.jp/2011/07/ios-uitableview.html
 - (void)scrollViewDidScroll:(UIScrollView *)sender
 {
-    NSLog(@"scrollViewDidScroll @ x=%f, y=%f",
-          scrollView.contentOffset.x,
-          scrollView.contentOffset.y);
+//    NSLog(@"scrollViewDidScroll @ x=%f, y=%f",
+//          scrollView.contentOffset.x,
+//          scrollView.contentOffset.y);
     
+    
+    CGPoint currentPoint = [scrollView contentOffset];
+    
+    if (CGPointEqualToPoint(_scrollPrevPoint, currentPoint)){
+        return;
+    }
+    else {
+        //上下スクロール方向の判定
+        _scrolling_direction = (_scrollPrevPoint.y != currentPoint.y) ? 2 : 1;
+        
+        if(_scrolling_direction != 2){//上下方向の移動ではないとき
+            //左フリックは無効化(_scrolling_directionは偶数の時に元座標にリセット)
+            _scrolling_direction = (_scrollPrevPoint.x < currentPoint.x) ? 4 : 3;
+        }
+        
+//        NSLog(@"cy=%f, _sy=%f _scrolling_direction = %d : %@",
+//              currentPoint.y,
+//              _scrollPrevPoint.y,
+//              _scrolling_direction,
+//              _scrolling_direction==2?@"キャンセル":@"スクロール中");
+    }
+    
+    //常にスクロール縦位置は同じ
+    currentPoint.y = _scrollPrevPoint.y;
+    //上下及び右スクロールのキャンセル
+    if (_scrolling_direction % 2 == 0)
+    {
+        
+        currentPoint.x = _scrollPrevPoint.x;
+        [scrollView setContentOffset:currentPoint];
+        _cancelDecelerating = true; //慣性スクロールを止めるためのフラグをセット
+    }
+    
+    
+    
+    //左方向である場合は一定の閾値以上であれば「戻る」アクション
     if(scrollView.contentOffset.x < -returnView.bounds.size.width/2){
         [scrollView setContentOffset:scrollView.contentOffset animated:NO];
         
         NSLog(@"touch limit-left side");
-        
-        
-//        [UIView
-//         animateWithDuration:3.25f
-//         delay:0.0f
-//         options:UIViewAnimationOptionCurveEaseIn
-//         animations:^{
-//             scrollView.contentOffset =
-//             CGPointMake(-self.view.bounds.size.width/2, 0);
-//             
-//         }
-//         completion:^(BOOL finished){
-//             if(finished){
-//                 
-////                 [self dismissViewController];
-//                 [self performSelector:@selector(dismissViewController)
-//                            withObject:nil
-//                            afterDelay:3.0f];
-//             }
-//         }];
-        
         
 //        [self dismissViewController];
         //１秒後に戻る
         [self performSelector:@selector(dismissViewController)
                    withObject:nil
                    afterDelay:1.0f];
-        
-        
         
     }
     
