@@ -128,10 +128,10 @@ UIActivityIndicatorView *indicator;
     //表示コンポーネントやデータの初期化等
     NSArray *arrTable = [NSArray arrayWithObjects:
                          [[ArticleTable alloc] initWithType:TableTypeTechnology],//category:0
-                         [[ArticleTable alloc] initWithType:TableTypeSports],//category:1
-                         [[ArticleTable alloc] initWithType:TableTypeArts],
-                         [[ArticleTable alloc] initWithType:TableTypePolitics],
-                         [[ArticleTable alloc] initWithType:TableTypeFinance],
+//                         [[ArticleTable alloc] initWithType:TableTypeSports],//category:1
+//                         [[ArticleTable alloc] initWithType:TableTypeArts],
+//                         [[ArticleTable alloc] initWithType:TableTypePolitics],
+//                         [[ArticleTable alloc] initWithType:TableTypeFinance],
                          nil];
     
     arrArticleData = [NSMutableArray array];
@@ -156,9 +156,10 @@ UIActivityIndicatorView *indicator;
         
         for(int j = 0;j < MIN(maxDispArticle, numOfArticleAtDB);j++){//各テーブルに最大表示数までのセルを配置
             //naiveはblog_id999とかispost判定をしていないphpファイル実行
-            lastID = [DatabaseManage
-                      getLastIDFromDBUnderNaive:lastID
-                      category:category];
+//            lastID = [DatabaseManage
+//                      getLastIDFromDBUnderNaive:lastID
+//                      category:category];
+            lastID = 17054;//test用
             
             
             //上記キー値を元にデータを取得

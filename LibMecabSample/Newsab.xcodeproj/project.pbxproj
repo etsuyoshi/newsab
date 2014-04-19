@@ -56,6 +56,7 @@
 		34EA200C18A2001F004376A0 /* TFHppleElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 34EA200818A2001F004376A0 /* TFHppleElement.m */; };
 		34EA200D18A2001F004376A0 /* XPathQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 34EA200A18A2001F004376A0 /* XPathQuery.m */; };
 		34EA200F18A203E6004376A0 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 34EA200E18A203E6004376A0 /* libxml2.dylib */; };
+		34FFD6E01902180900F5413A /* allow_update.png in Resources */ = {isa = PBXBuildFile; fileRef = 34FFD6DF1902180900F5413A /* allow_update.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -141,6 +142,7 @@
 		34EA200918A2001F004376A0 /* XPathQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XPathQuery.h; sourceTree = "<group>"; };
 		34EA200A18A2001F004376A0 /* XPathQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XPathQuery.m; sourceTree = "<group>"; };
 		34EA200E18A203E6004376A0 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
+		34FFD6DF1902180900F5413A /* allow_update.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = allow_update.png; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Newsab-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Newsab-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -275,6 +277,7 @@
 		3435878618AA530700D8632B /* Image */ = {
 			isa = PBXGroup;
 			children = (
+				34FFD6DF1902180900F5413A /* allow_update.png */,
 				3435872718AA344500D8632B /* aman.png */,
 				3435873218AA34C600D8632B /* bird.png */,
 				3435873318AA34C600D8632B /* building.png */,
@@ -441,6 +444,7 @@
 				13C86E9712C87C9D006F2369 /* left-id.def in Resources */,
 				13C86E9812C87C9D006F2369 /* matrix.bin in Resources */,
 				13C86E9912C87C9D006F2369 /* pos-id.def in Resources */,
+				34FFD6E01902180900F5413A /* allow_update.png in Resources */,
 				13C86E9A12C87C9D006F2369 /* rewrite.def in Resources */,
 				13C86E9B12C87C9D006F2369 /* right-id.def in Resources */,
 				3435873D18AA34C600D8632B /* desk.png in Resources */,

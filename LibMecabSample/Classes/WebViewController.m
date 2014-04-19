@@ -10,7 +10,7 @@
 
 NSString *strUrl;
 
-UIToolbar *toolBar;
+UIToolbar *toolBarWeb;
 UIBarButtonItem *returnBarButton;
 UIBarButtonItem *fBarButton;
 UIBarButtonItem *bBarButton;
@@ -37,8 +37,8 @@ UIBarButtonItem *bBarButton;
         strUrl = _strUrl;
         
         
-        toolBar = [[UIToolbar alloc] init];
-        toolBar.frame = CGRectMake(0, 0, self.view.frame.size.width, 50);
+        toolBarWeb = [[UIToolbar alloc] init];
+        toolBarWeb.frame = CGRectMake(0, 0, self.view.frame.size.width, 50);
         
         NSMutableArray *items = [[NSMutableArray alloc] init];
         returnBarButton =
@@ -70,10 +70,10 @@ UIBarButtonItem *bBarButton;
         [items addObject:fBarButton];
         [items addObject:bBarButton];
         
-        [toolBar setItems:items animated:NO];
+        [toolBarWeb setItems:items animated:NO];
         
         
-        [self.view addSubview:toolBar];
+        [self.view addSubview:toolBarWeb];
         
         
         
@@ -82,7 +82,7 @@ UIBarButtonItem *bBarButton;
         //webView
         UIWebView *webview=
         [[UIWebView alloc]initWithFrame:
-         CGRectMake(0, toolBar.frame.size.height,
+         CGRectMake(0, toolBarWeb.frame.size.height,
                     self.view.frame.size.width,
                     self.view.frame.size.height)];
         NSString *url=strUrl;//@"http://techable.jp/archives/13102";

@@ -10,8 +10,10 @@
 #import "ArticleData.h"
 #import "WebViewController.h"
 
-@interface TextViewController : UIViewController
+@interface TextViewController : UIViewController <UIScrollViewDelegate>
 
 -(id)initWithArticle:(ArticleData *)_articleData;
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView;
 
 @end
