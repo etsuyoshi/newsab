@@ -132,6 +132,15 @@ UIScrollView *scrollView;
          CGRectMake(0, 0, 50, self.view.bounds.size.height)];
         returnView.backgroundColor = [UIColor grayColor];
         
+        
+        //allow追加
+        UIImageView *viewAllow =
+        [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"allow_update.png"]];
+        viewAllow.center =
+        CGPointMake(returnView.bounds.size.width/2,
+                    returnView.bounds.size.height/2);
+        [returnView addSubview:viewAllow];
+        
         textView = [[UITextView alloc]initWithFrame:
                     CGRectMake(returnView.bounds.size.width,//returnViewの右隣
                                200,
@@ -255,36 +264,44 @@ UIScrollView *scrollView;
                        animated:NO completion:nil];
 }
 
+//http://cocoadays.blogspot.jp/2011/07/ios-uitableview.html
 - (void)scrollViewDidScroll:(UIScrollView *)sender
 {
     NSLog(@"scrollViewDidScroll @ x=%f, y=%f",
           scrollView.contentOffset.x,
           scrollView.contentOffset.y);
     
-    if(scrollView.contentOffset.x < -50.0){
+    if(scrollView.contentOffset.x < -returnView.bounds.size.width){
+        scrollView.pagingEnabled = NO;
+//        scrollView.contentOffset.x = -50;
         NSLog(@"touch left side");
         
         
-        [UIView
-         animateWithDuration:3.25f
-         delay:0.0f
-         options:UIViewAnimationOptionCurveEaseIn
-         animations:^{
-             scrollView.contentOffset =
-             CGPointMake(-self.view.bounds.size.width/2, 0);
-             
-         }
-         completion:^(BOOL finished){
-             if(finished){
-                 
-//                 [self dismissViewController];
-                 [self performSelector:@selector(dismissViewController)
-                            withObject:nil
-                            afterDelay:3.0f];
-             }
-         }];
+//        [UIView
+//         animateWithDuration:3.25f
+//         delay:0.0f
+//         options:UIViewAnimationOptionCurveEaseIn
+//         animations:^{
+//             scrollView.contentOffset =
+//             CGPointMake(-self.view.bounds.size.width/2, 0);
+//             
+//         }
+//         completion:^(BOOL finished){
+//             if(finished){
+//                 
+////                 [self dismissViewController];
+//                 [self performSelector:@selector(dismissViewController)
+//                            withObject:nil
+//                            afterDelay:3.0f];
+//             }
+//         }];
         
         
+        [self dismissViewController];
+        //１秒後に戻る
+//        [self performSelector:@selector(dismissViewController)
+//                   withObject:nil
+//                   afterDelay:1.0f];
         
         
         
