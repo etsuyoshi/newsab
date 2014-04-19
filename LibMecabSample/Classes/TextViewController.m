@@ -78,9 +78,6 @@ UIScrollView *scrollView;
         [toolBarText setItems:items animated:NO];
         
         
-        
-        
-        
         //画面全体にスクロールビューを表示
         scrollView = [[UIScrollView alloc]initWithFrame:
                       CGRectMake(0,//-self.view.bounds.size.width/2,
@@ -91,45 +88,11 @@ UIScrollView *scrollView;
         scrollView.alwaysBounceHorizontal = YES;
         scrollView.alwaysBounceVertical = NO;
         
-        //戻るボタン:フリックでも戻る:以下、消去可能
-//        viewReturn = [[UIView alloc]initWithFrame:CGRectMake(10, 10, 150, 70)];
-//        [viewReturn setBackgroundColor:[UIColor colorWithRed:1.0 green:0 blue:0 alpha:0.5f]];
-//
-//        
-//        //tap recognizer
-//        UITapGestureRecognizer *tapGestureReturn;
-//        tapGestureReturn = [[UITapGestureRecognizer alloc]
-//                            initWithTarget:self
-//                            action:@selector(onTapped:)];
-//        [viewReturn addGestureRecognizer:tapGestureReturn];
-//        viewReturn.userInteractionEnabled = YES;
-//        viewReturn.tag = 0;
-//        
-//        //本サイトへのリンク
-//        viewLink = [[UIView alloc]initWithFrame:CGRectMake(200, 10, 150, 70)];
-//        [viewLink setBackgroundColor:[UIColor colorWithRed:0 green:1.0 blue:0 alpha:0.5f]];
-//        
-//        //tap recognizer
-//        UITapGestureRecognizer *tapGestureLink;
-//        tapGestureLink = [[UITapGestureRecognizer alloc]
-//                          initWithTarget:self
-//                          action:@selector(onTapped:)];
-//        [viewLink addGestureRecognizer:tapGestureLink];
-//        viewLink.userInteractionEnabled = YES;
-//        viewLink.tag = 1;
-        
-        
-        //記事のタイトル表示と要約表示
-//        articleCell =//磨りガラス風にしたいので転用(特別な意図はない)
-//        [[ArticleCell alloc]
-//         initWithFrame:CGRectMake(30, 180, 300, 350)
-//         withArticleData:_articleData];
-        
-        
+        //戻るために右スライドした時に表示される左ビュー
         returnView =
         [[UIView alloc]
          initWithFrame:
-         CGRectMake(0, 0, 50, self.view.bounds.size.height)];
+         CGRectMake(0, 0, 100, self.view.bounds.size.height)];
         returnView.backgroundColor = [UIColor grayColor];
         
         
@@ -137,7 +100,7 @@ UIScrollView *scrollView;
         UIImageView *viewAllow =
         [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"allow_update.png"]];
         viewAllow.center =
-        CGPointMake(returnView.bounds.size.width/2,
+        CGPointMake(returnView.bounds.size.width*2/3,
                     returnView.bounds.size.height/2);
         [returnView addSubview:viewAllow];
         
@@ -220,9 +183,7 @@ UIScrollView *scrollView;
     scrollView.scrollEnabled = YES;
     [self.view addSubview:toolBarText];
     
-//    [viewImage addSubview:viewReturn];
-//    [viewImage addSubview:viewLink];
-    
+    //viewDidLoadに記載すべき
     [contentViewOnScroll addSubview:viewImage];
     [contentViewOnScroll addSubview:textView];
     [contentViewOnScroll addSubview:returnView];
@@ -264,6 +225,42 @@ UIScrollView *scrollView;
                        animated:NO completion:nil];
 }
 
+//http://ushisantoasobu.hateblo.jp/entry/2012/11/25/200806
+
+//スクロールの減速がなくなったとき
+//-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+////    [self adjustScrollViewOffset];
+//    NSLog(@"scrollviewDidEndDecelarating");
+//}
+//
+////ドラッグが完了したとき
+//-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView
+//                 willDecelerate:(BOOL)decelerate {
+//    NSLog(@"scrollviewDidEndDragging : dec = %d", decelerate);
+////    [scrollView setContentOffset:scrollView.contentOffset animated:NO];
+//    if(decelerate)
+//        return;
+//    
+//    
+////    [self adjustScrollViewOffset];
+//}
+//
+//- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
+//{
+//    //↓これで止まる
+//    *targetContentOffset = scrollView.contentOffset;
+//    
+//}
+//
+//-(void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
+//{
+//    //↓これで止まる
+//    [scrollView setContentOffset:scrollView.contentOffset animated:NO];
+//    
+//}
+
+
+
 //http://cocoadays.blogspot.jp/2011/07/ios-uitableview.html
 - (void)scrollViewDidScroll:(UIScrollView *)sender
 {
@@ -271,10 +268,10 @@ UIScrollView *scrollView;
           scrollView.contentOffset.x,
           scrollView.contentOffset.y);
     
-    if(scrollView.contentOffset.x < -returnView.bounds.size.width){
-        scrollView.pagingEnabled = NO;
-//        scrollView.contentOffset.x = -50;
-        NSLog(@"touch left side");
+    if(scrollView.contentOffset.x < -returnView.bounds.size.width/2){
+        [scrollView setContentOffset:scrollView.contentOffset animated:NO];
+        
+        NSLog(@"touch limit-left side");
         
         
 //        [UIView
@@ -297,21 +294,16 @@ UIScrollView *scrollView;
 //         }];
         
         
-        [self dismissViewController];
+//        [self dismissViewController];
         //１秒後に戻る
-//        [self performSelector:@selector(dismissViewController)
-//                   withObject:nil
-//                   afterDelay:1.0f];
+        [self performSelector:@selector(dismissViewController)
+                   withObject:nil
+                   afterDelay:1.0f];
         
         
         
     }
     
-//    CGFloat pageWidth = scrollView.frame.size.width;
-//    
-//    if (fmod(scrollView.contentOffset.x, pageWidth) == 0.0) {
-//        int pageNum = scrollView.contentOffset.x / pageWidth;
-//    }
 }
 
 @end
