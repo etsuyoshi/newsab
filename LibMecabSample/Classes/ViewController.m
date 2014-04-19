@@ -158,17 +158,19 @@ UIActivityIndicatorView *indicator;
             
             
             //naiveはblog_id999とかispost判定をしていないphpファイル実行
-//            lastID = [DatabaseManage
-//                      getLastIDFromDBUnderNaive:lastID
-//                      category:category];
+            NSLog(@"id取得中...");
+            lastID = [DatabaseManage
+                      getLastIDFromDBUnderNaive:lastID
+                      category:category];
+            NSLog(@"id取得完了");
             
-            lastID = 17054;//test用
+//            lastID = 17054;//test用
             
             
             //上記キー値を元にデータを取得
-//            NSLog(@"id取得中..");//以下の処理が最も時間がかかる(５秒程度)
+            NSLog(@"記事取得中..");//以下の処理が最も時間がかかる(５秒程度)
             NSDictionary *dictTmp = [DatabaseManage getRecordFromDBAt:lastID];//指定したIDを取得する
-//            NSLog(@"id取得完了");
+            NSLog(@"記事取得完了");
             lastID = (int)[[dictTmp objectForKey:@"id"] integerValue];
 
             NSString *strTitle = [dictTmp objectForKey:@"title"];
